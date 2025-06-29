@@ -1,10 +1,20 @@
+import os
+from django.utils.text import slugify
 from django.conf import settings
 from django.db import models
+
+
+def actor_directory_path(instance: "Actor", filename: str) -> str:
+    actor_slug = slugify(f"{instance.first_name}_{instance.last_name}")
+    return os.path.join("actors", actor_slug, filename)
 
 
 class Actor(models.Model):
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
+    avatar = models.ImageField(
+        upload_to=actor_directory_path, default="actors/default.jpg"
+    )
 
     def __str__(self) -> str:
         return f"{self.first_name} {self.last_name}"
