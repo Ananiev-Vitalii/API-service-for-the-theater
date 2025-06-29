@@ -29,8 +29,8 @@ class Play(models.Model):
 
 class TheatreHall(models.Model):
     name = models.CharField(max_length=100)
-    rows = models.PositiveIntegerField()  #
-    seats_in_row = models.PositiveIntegerField()  #
+    rows = models.PositiveIntegerField()
+    seats_in_row = models.PositiveIntegerField()
 
     def __str__(self) -> str:
         return self.name
