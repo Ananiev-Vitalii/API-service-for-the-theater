@@ -5,6 +5,7 @@ from django.contrib import admin
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+    path("", include("theater.urls", namespace="theater"))
 ]
 
 if settings.DEBUG:

@@ -1,0 +1,42 @@
+{% for perf in performances %}
+<div class="col-md-4">
+  <div class="card h-100">
+    <div class="performances-card-img-wrapper">
+      <img
+              src="{{ perf.play.image.url }}"
+              class="card-img-top"
+              alt="{{ perf.play.title }}"
+      >
+    </div>
+    <div class="card-body d-flex flex-column">
+      <h5 class="card-title">{{ perf.play.title }}</h5>
+      <p class="card-genre mb-1">
+        <strong>Genre:</strong>
+        {% for genre in perf.play.genres.all %}
+        {{ genre.name }}
+        {% endfor %}
+      </p>
+      <p class="card-theatre mb-1">
+        <strong>Theatre hall:</strong>
+        {{ perf.theatre_hall.name }}
+      </p>
+      <p class="card-text flex-grow-1">
+        {{ perf.play.description }}
+      </p>
+      <p class="text-muted mb-2">
+        {{ perf.show_time|date:"F j, Y g:i A" }}
+      </p>
+      <a
+              href="#"
+              class="btn btn-primary text-white mt-auto"
+      >
+        Buy a ticket
+      </a>
+    </div>
+  </div>
+</div>
+{% empty %}
+<div class="col-12">
+  <p class="text-center">There are currently no upcoming performances.</p>
+</div>
+{% endfor %}
