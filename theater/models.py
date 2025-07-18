@@ -1,7 +1,8 @@
-import os
+from django.core.validators import MinValueValidator
 from django.utils.text import slugify
 from django.conf import settings
 from django.db import models
+import os
 
 
 def actor_directory_path(instance: "Actor", filename: str) -> str:
@@ -9,11 +10,16 @@ def actor_directory_path(instance: "Actor", filename: str) -> str:
     return os.path.join("actors", actor_slug, filename)
 
 
+def play_directory_path(instance: "Play", filename: str) -> str:
+    play_slug = slugify(f"{instance.title}")
+    return os.path.join("plays", play_slug, filename)
+
+
 class Actor(models.Model):
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     avatar = models.ImageField(
-        upload_to=actor_directory_path, default="actors/default.jpg"
+        upload_to=actor_directory_path, default="actors/default.png"
     )
 
     def __str__(self) -> str:
@@ -21,26 +27,29 @@ class Actor(models.Model):
 
 
 class Genre(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=50)
 
     def __str__(self) -> str:
         return self.name
 
 
 class Play(models.Model):
-    title = models.CharField(max_length=255)
-    description = models.TextField()
-    actors = models.ManyToManyField(Actor, related_name="plays", blank=True)
-    genres = models.ManyToManyField(Genre, related_name="plays", blank=True)
+    title = models.CharField(max_length=50)
+    description = models.TextField(max_length=255)
+    actors = models.ManyToManyField(Actor, related_name="plays")
+    genres = models.ManyToManyField(Genre, related_name="plays")
+    image = models.ImageField(
+        upload_to=play_directory_path, default="plays/default.png"
+    )
 
     def __str__(self) -> str:
         return self.title
 
 
 class TheatreHall(models.Model):
-    name = models.CharField(max_length=100)
-    rows = models.PositiveIntegerField()
-    seats_in_row = models.PositiveIntegerField()
+    name = models.CharField(max_length=20)
+    rows = models.PositiveIntegerField(validators=[MinValueValidator(1)])
+    seats_in_row = models.PositiveIntegerField(validators=[MinValueValidator(1)])
 
     def __str__(self) -> str:
         return self.name
@@ -70,8 +79,8 @@ class Reservation(models.Model):
 
 
 class Ticket(models.Model):
-    row = models.PositiveIntegerField()
-    seat = models.PositiveIntegerField()
+    row = models.PositiveIntegerField(validators=[MinValueValidator(1)])
+    seat = models.PositiveIntegerField(validators=[MinValueValidator(1)])
     performance = models.ForeignKey(
         Performance, on_delete=models.CASCADE, related_name="tickets"
     )
