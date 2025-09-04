@@ -5,7 +5,9 @@ from django.contrib import admin
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("", include("theater.urls", namespace="theater"))
+    path("", include("theater.urls", namespace="theater")),
+    path("ajax/", include(("theater.ajax_urls", "ajax"), namespace="ajax")),
+    path("api/", include(("theater.api_urls", "api"), namespace="api")),
 ]
 
 if settings.DEBUG:
