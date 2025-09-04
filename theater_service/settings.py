@@ -9,9 +9,10 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
+    "widget_tweaks",
     "debug_toolbar",
     "user",
-    "theater",
+    "theater.apps.TheaterConfig",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
