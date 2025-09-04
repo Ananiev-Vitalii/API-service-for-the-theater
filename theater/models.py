@@ -1,8 +1,11 @@
 from django.core.validators import MinValueValidator
+from django.core.exceptions import ValidationError
 from django.utils.text import slugify
 from django.conf import settings
 from django.db import models
 import os
+
+from theater.messages import MSG
 
 
 def actor_directory_path(instance: "Actor", filename: str) -> str:
@@ -89,7 +92,36 @@ class Ticket(models.Model):
     )
 
     class Meta:
-        unique_together = ("performance", "row", "seat")
+        constraints = [
+            models.UniqueConstraint(
+                fields=["performance", "row", "seat"],
+                name="uniq_performance_row_seat",
+                violation_error_message=MSG.SEAT_TAKEN,
+            )
+        ]
 
     def __str__(self) -> str:
         return f"Ticket for {self.performance} - Row {self.row} Seat {self.seat}"
+
+    def clean(self) -> None:
+        if not self.performance_id or self.row is None or self.seat is None:
+            return
+
+        hall = self.performance.theatre_hall
+
+        errors = {
+            "row": (
+                f"Row must be between 1 and {hall.rows}."
+                if self.row > hall.rows
+                else None
+            ),
+            "seat": (
+                f"Seat must be between 1 and {hall.seats_in_row}."
+                if self.seat > hall.seats_in_row
+                else None
+            ),
+        }
+        errors = {k: v for k, v in errors.items() if v}
+
+        if errors:
+            raise ValidationError(errors)
