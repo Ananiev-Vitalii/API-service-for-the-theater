@@ -169,6 +169,50 @@ section {
 }
 
 
+/* Reserve Your Seat Section */
+.booking-card,
+.hall-card {
+  border: 0;
+  border-radius: .5rem;
+  backdrop-filter: saturate(120%);
+}
+
+.booking-card .form-select,
+.booking-card .form-control {
+  height: 56px;
+  border-radius: 10px;
+}
+
+.form-floating > label {
+  color: #6c757d;
+}
+
+.form-select:focus,
+.form-control:focus {
+  border-color: gold;
+  box-shadow: 0 0 0 0.25rem gold;
+}
+
+.hall-media-wrap {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  background: #111;
+}
+.hall-media-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: .92;
+}
+.hall-overlay {
+  position: absolute; inset: 0;
+  display: grid; place-items: end start;
+  padding: 16px;
+  background: linear-gradient(to top, rgba(0,0,0,.35), rgba(0,0,0,0));
+}
+.hall-caption { color: #fff; }
+
+
 /* Footer Section */
 .site-footer {
   background-color: #333;
