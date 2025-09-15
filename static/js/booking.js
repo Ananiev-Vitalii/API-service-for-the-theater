@@ -42,6 +42,17 @@ export function initBookingForm() {
 
   let rowsCount = 0, seatsPerRow = 0, taken = [];
 
+  // --- helper: refresh "My Reservations" table after success ---
+  function refreshMyReservations() {
+    const tbody = document.getElementById('my-reservations-body');
+    const url = tbody?.dataset?.url;
+    if (!tbody || !url) return;
+    fetch(url, { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+      .then(r => r.ok ? r.text() : Promise.reject(r))
+      .then(html => { tbody.innerHTML = html; })
+      .catch(() => {});
+  }
+
   // ---- helpers (UI) ----
   function hideAlert() {
     alertBox.classList.add('d-none');
@@ -260,6 +271,7 @@ export function initBookingForm() {
         if (perfSelect.value) {
           loadHallData(perfSelect.value, { keepAlert: true, autoSwitch: true });
         }
+        refreshMyReservations();
       } else {
         const msg = pickMessage(payload) || 'Please fix the form errors and try again.';
         showAlert('error', msg);

@@ -76,6 +76,7 @@ Wildfire Stageworks
   </div>
 </section>
 
+
 <!-- Reserve Your Seat -->
 <section id="ticket-purchase" class="py-5 booking-section">
   <div class="container">
@@ -147,6 +148,55 @@ Wildfire Stageworks
   </div>
 </section>
 
+<!-- My Reservations -->
+<section id="my-reservations" class="py-5">
+  <div class="container">
+    <h2 class="section-title">My Reservations</h2>
+
+    <div class="table-responsive">
+      <table class="table table-bordered table-hover align-middle">
+        <thead class="thead-light">
+          <tr>
+            <th>#</th>
+            <th>Performance</th>
+            <th>Date</th>
+            <th>Theatre Hall</th>
+            <th>Row</th>
+            <th>Seat</th>
+            <th>Reservation Date</th>
+          </tr>
+        </thead>
+        <tbody id="my-reservations-body" data-url="{% url 'ajax:reservations-my' %}">
+          {% if my_tickets %}
+            {% for t in my_tickets %}
+              <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ t.performance.play.title }}</td>
+                <td>{{ t.performance.show_time|date:"Y-m-d H:i" }}</td>
+                <td>{{ t.performance.theatre_hall.name }}</td>
+                <td>{{ t.row }}</td>
+                <td>{{ t.seat }}</td>
+                <td>{{ t.reservation.created_at|date:"Y-m-d H:i" }}</td>
+              </tr>
+            {% empty %}
+              <tr>
+                <td colspan="7" class="text-center text-muted py-4">
+                  You have no reservations yet.
+                </td>
+              </tr>
+            {% endfor %}
+          {% else %}
+            <tr>
+              <td colspan="7" class="text-center text-muted py-4">
+                You have no reservations yet.
+              </td>
+            </tr>
+          {% endif %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
 {% endblock content %}
 
 {% block js %}

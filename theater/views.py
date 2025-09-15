@@ -2,11 +2,12 @@ from django.views import generic
 from django.utils import timezone
 from django.db.models import QuerySet
 from django.http import JsonResponse, HttpRequest
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, render
 from django.views.generic.edit import FormMixin
 from django.db import IntegrityError, transaction
 from django.views.decorators.http import require_GET
 from django.contrib.auth.views import redirect_to_login
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 from theater.utils import ajax_only
 from theater.forms import TicketForm
@@ -57,6 +58,19 @@ class PerformanceBaseListView(generic.ListView):
         return queryset if self.limit is None else queryset[: self.limit]
 
 
+class MyReservationsPartialView(LoginRequiredMixin, generic.ListView):
+    template_name = "includes/reservations_rows.html"
+    context_object_name = "my_tickets"
+
+    def get_queryset(self):
+        return (
+            Ticket.objects
+            .filter(reservation__user=self.request.user)
+            .select_related("performance__play", "performance__theatre_hall", "reservation")
+            .order_by("-reservation__created_at")
+        )
+
+
 # Main
 class HomePageListView(FormMixin, PerformanceBaseListView):
     template_name = "theater/home.html"
@@ -70,6 +84,18 @@ class HomePageListView(FormMixin, PerformanceBaseListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["actors"] = Actor.objects.all().order_by("last_name")[:3]
+        if self.request.user.is_authenticated:
+            context["my_tickets"] = (
+                Ticket.objects.filter(reservation__user=self.request.user)
+                .select_related(
+                    "reservation",
+                    "performance__play",
+                    "performance__theatre_hall",
+                )
+                .order_by("-reservation__created_at", "-id")
+            )
+        else:
+            context["my_tickets"] = None
         return context
 
     def post(self, request, *args, **kwargs):
