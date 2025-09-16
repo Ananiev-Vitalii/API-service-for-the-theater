@@ -47,8 +47,14 @@ export function initBookingForm() {
     const tbody = document.getElementById('my-reservations-body');
     const url = tbody?.dataset?.url;
     if (!tbody || !url) return;
-    fetch(url, { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
-      .then(r => r.ok ? r.text() : Promise.reject(r))
+    fetch(url, {
+      headers: { 'X-Requested-With': 'XMLHttpRequest', 'Accept': 'text/html' },
+      credentials: 'same-origin'
+    })
+      .then(res => {
+        if (res.redirected) { window.location = res.url; return Promise.reject(); }
+        return res.ok ? res.text() : Promise.reject(res);
+      })
       .then(html => { tbody.innerHTML = html; })
       .catch(() => {});
   }
@@ -165,7 +171,8 @@ export function initBookingForm() {
       headers: {
         'X-Requested-With': 'XMLHttpRequest',
         'Accept': 'application/json'
-      }
+      },
+      credentials: 'same-origin'
     })
     .then(async (r) => {
       if (!r.ok) {
@@ -253,7 +260,8 @@ export function initBookingForm() {
     fetch(form.getAttribute('action') || window.location.href, {
       method: 'POST',
       body: formData,
-      headers: { 'X-Requested-With': 'XMLHttpRequest', 'Accept': 'application/json' }
+      headers: { 'X-Requested-With': 'XMLHttpRequest', 'Accept': 'application/json' },
+      credentials: 'same-origin'
     })
     .then(async (res) => {
       if (res.redirected) { window.location = res.url; return; }

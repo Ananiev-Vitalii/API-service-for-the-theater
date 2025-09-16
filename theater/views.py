@@ -8,6 +8,10 @@ from django.db import IntegrityError, transaction
 from django.views.decorators.http import require_GET
 from django.contrib.auth.views import redirect_to_login
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import (
+    Count, F, IntegerField, BooleanField, ExpressionWrapper,
+    Case, When, Value,
+)
 
 from theater.utils import ajax_only
 from theater.forms import TicketForm
@@ -48,14 +52,28 @@ class PerformanceBaseListView(generic.ListView):
     template_name = "includes/performances_partial.html"
     limit: int | None = 3
 
-    def get_queryset(self) -> QuerySet[Performance]:
-        queryset = (
+    def get_queryset(self):
+        qs = (
             Performance.objects.filter(show_time__gte=timezone.now())
             .select_related("play", "theatre_hall")
             .prefetch_related("play__genres")
+            .annotate(
+                reserved=Count("tickets"),
+                capacity=ExpressionWrapper(
+                    F("theatre_hall__rows") * F("theatre_hall__seats_in_row"),
+                    output_field=IntegerField(),
+                ),
+            )
+            .annotate(
+                sold_out=Case(
+                    When(reserved__gte=F("capacity"), then=Value(True)),
+                    default=Value(False),
+                    output_field=BooleanField(),
+                )
+            )
             .order_by("show_time")
         )
-        return queryset if self.limit is None else queryset[: self.limit]
+        return qs if self.limit is None else qs[: self.limit]
 
 
 class MyReservationsPartialView(LoginRequiredMixin, generic.ListView):
@@ -64,9 +82,10 @@ class MyReservationsPartialView(LoginRequiredMixin, generic.ListView):
 
     def get_queryset(self):
         return (
-            Ticket.objects
-            .filter(reservation__user=self.request.user)
-            .select_related("performance__play", "performance__theatre_hall", "reservation")
+            Ticket.objects.filter(reservation__user=self.request.user)
+            .select_related(
+                "performance__play", "performance__theatre_hall", "reservation"
+            )
             .order_by("-reservation__created_at")
         )
 
