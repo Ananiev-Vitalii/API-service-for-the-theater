@@ -1,7 +1,8 @@
 {% load static %}
-<nav id="mainNavbar" class="navbar navbar-expand-lg fixed-top">
+
+<nav id="mainNavbar" class="navbar navbar-expand-xl fixed-top">
   <div class="container">
-    <a class="navbar-brand text-white d-flex align-items-center" href="#home">
+    <a class="navbar-brand text-white d-flex align-items-center" href="{% url 'theater:home' %}#home">
       <img src="{% static 'img/logo.png' %}" alt="Logo" class="logo">
       Wildfire Stageworks
     </a>
@@ -15,13 +16,29 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav ms-auto">
-        <li class="nav-item"><a class="nav-link" href="#home">Home</a></li>
-        <li class="nav-item"><a class="nav-link" href="#about">About us</a></li>
-        <li class="nav-item"><a class="nav-link" href="#performances">Performances</a></li>
-        <li class="nav-item"><a class="nav-link" href="#actors">Actors</a></li>
-        <li class="nav-item"><a class="nav-link" href="#ticket-purchase">Book Seat</a></li>
-        <li class="nav-item"><a class="nav-link" href="#my-reservations">My Reservations</a></li>
-        <li class="nav-item"><a class="nav-link" href="#contacts">Contacts</a></li>
+        <li class="nav-item"><a class="nav-link" href="{% url 'theater:home' %}#home">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="{% url 'theater:home' %}#about">About us</a></li>
+        <li class="nav-item"><a class="nav-link" href="{% url 'theater:home' %}#performances">Performances</a></li>
+        <li class="nav-item"><a class="nav-link" href="{% url 'theater:home' %}#actors">Actors</a></li>
+        <li class="nav-item"><a class="nav-link" href="{% url 'theater:home' %}#ticket-purchase">Book Seat</a></li>
+        <li class="nav-item"><a class="nav-link" href="{% url 'theater:home' %}#my-reservations">My Reservations</a>
+        </li>
+        <li class="nav-item"><a class="nav-link" href="{% url 'theater:home' %}#contacts">Contacts</a></li>
+        {% if user.is_authenticated %}
+        <li class="nav-item">
+          <a href="#" class="nav-item nav-link" id="logout-link">Log out</a>
+        </li>
+        <form id="logout-form" action="{% url 'user:logout' %}" method="post" style="display: none;">
+          {% csrf_token %}
+        </form>
+        {% else %}
+        <li class="nav-item">
+          <a href="{% url 'user:login' %}"
+             class="nav-item nav-link {% if request.resolver_match.url_name == 'login' %} active {% endif %}">
+            Log in
+          </a>
+        </li>
+        {% endif%}
       </ul>
     </div>
   </div>

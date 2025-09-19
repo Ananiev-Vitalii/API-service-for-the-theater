@@ -35,8 +35,7 @@
       {% if request.user.is_authenticated %}
       <a href="{{ home_url }}#ticket-purchase" class="btn btn-primary text-white mt-auto">Buy a ticket</a>
       {% else %}
-      <a href="{% url 'login' %}?next={{ home_url|urlencode }}%23ticket-purchase"
-         class="btn btn-primary text-white mt-auto">Buy a ticket</a>
+      <a href="{% url 'user:login' %}" class="btn btn-primary text-white mt-auto">Buy a ticket</a>
       {% endif %}
       {% endif %}
     </div>

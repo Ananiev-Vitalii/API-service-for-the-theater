@@ -1,87 +1,93 @@
-// --- small helper to fetch HTML partials (actors/performances) ---
+// --- helper: fetch HTML partials (actors/performances) ---
 function fetchPartial(url, onOk) {
   if (!url) return;
   fetch(url, { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
     .then(r => (r.ok ? r.text() : Promise.reject(r)))
     .then(html => onOk(html))
-    .catch(() => { /* optionally show a toast */ });
+    .catch(() => { /* optional: toast */ });
 }
 
-// --- navbar active handling (robust alternative to ScrollSpy) ---
+// --- navbar: active link + smooth scroll (supports /...#id and #id) ---
 function initCustomAnchorScrollAndActive() {
   const nav = document.getElementById('mainNavbar');
   if (!nav) return;
 
-  // links like <a href="#section-id">
-  const links = Array.from(nav.querySelectorAll('.nav-link[href^="#"]'))
-    .filter(a => !!document.getElementById(a.getAttribute('href').slice(1)));
+  const entries = Array.from(nav.querySelectorAll('.nav-link[href*="#"]')).map(a => {
+    const href = a.getAttribute('href') || '';
+    const u = new URL(href, window.location.href);
+    return {
+      a,
+      href,
+      url: u,
+      hash: u.hash || '',
+      id: (u.hash || '').slice(1),
+      isLocal: u.pathname === window.location.pathname
+    };
+  });
 
-  if (!links.length) return;
+  if (!entries.length) return;
 
-  const sections = links.map(a => document.getElementById(a.getAttribute('href').slice(1)));
+  const local = entries.filter(e => e.isLocal && e.id && document.getElementById(e.id));
+  const sections = local.map(e => document.getElementById(e.id));
 
   function getNavbarHeight() {
     return nav.offsetHeight || 0;
   }
 
   function setActive(hash) {
-    links.forEach(a => a.classList.toggle('active', a.getAttribute('href') === hash));
+    entries.forEach(e => e.a.classList.toggle('active', e.hash === hash));
   }
 
-  // Choose section intersecting a horizontal line just under the navbar.
   function computeActive() {
+    if (!sections.length) return;
+
     const navH = getNavbarHeight();
     const lineY = navH + 2;
 
-    const atBottom =
-      Math.abs((window.pageYOffset + window.innerHeight) - document.documentElement.scrollHeight) < 2;
-    if (atBottom && sections.length) {
-      const last = links[sections.length - 1]?.getAttribute('href');
-      if (last) setActive(last);
+    const atBottom = Math.abs((window.pageYOffset + window.innerHeight) - document.documentElement.scrollHeight) < 2;
+    if (atBottom) {
+      const last = local[local.length - 1];
+      if (last) setActive(last.hash);
       return;
     }
 
     for (let i = 0; i < sections.length; i++) {
       const rect = sections[i].getBoundingClientRect();
       if (rect.top <= lineY && rect.bottom > lineY) {
-        const hash = links[i].getAttribute('href');
-        if (hash) setActive(hash);
+        setActive(local[i].hash);
         return;
       }
     }
 
-    // Fallback: nearest visible from top; or last if none
-    let activeIdx = 0;
+    let idx = 0;
     let minTop = Infinity;
     for (let i = 0; i < sections.length; i++) {
       const top = sections[i].getBoundingClientRect().top - navH - 1;
       if (top >= 0 && top < minTop) {
         minTop = top;
-        activeIdx = i;
+        idx = i;
       }
     }
-    if (minTop === Infinity && sections.length) activeIdx = sections.length - 1;
-    const hash = links[activeIdx]?.getAttribute('href');
-    if (hash) setActive(hash);
+    if (minTop === Infinity && local.length) idx = local.length - 1;
+    setActive(local[idx]?.hash || '');
   }
 
-  // Smooth scroll with clamp, collapse close on mobile
-  links.forEach(a => {
-    a.addEventListener('click', (e) => {
-      const hash = a.getAttribute('href');
-      const id = hash?.slice(1);
-      const el = id ? document.getElementById(id) : null;
+  entries.forEach(e => {
+    e.a.addEventListener('click', (ev) => {
+      if (!e.isLocal || !e.id) return; // external/other page: allow default navigation
+
+      const el = document.getElementById(e.id);
       if (!el) return;
 
-      e.preventDefault();
+      ev.preventDefault();
 
       const navH = getNavbarHeight();
       const desired = el.getBoundingClientRect().top + window.pageYOffset - navH;
       const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-      const top = Math.max(0, Math.min(desired, maxScroll)); // clamp inside page
+      const top = Math.max(0, Math.min(desired, maxScroll));
 
       window.scrollTo({ top, behavior: 'smooth' });
-      setActive(hash);
+      setActive(e.hash);
 
       const collapseEl = document.getElementById('navbarNav');
       const bsCollapse = window.bootstrap?.Collapse?.getInstance?.(collapseEl);
@@ -89,7 +95,6 @@ function initCustomAnchorScrollAndActive() {
     });
   });
 
-  // Throttled listeners
   let ticking = false;
   function onScrollOrResize() {
     if (!ticking) {
@@ -100,14 +105,14 @@ function initCustomAnchorScrollAndActive() {
       });
     }
   }
-  window.addEventListener('scroll', onScrollOrResize, { passive: true });
-  window.addEventListener('resize', onScrollOrResize);
-
-  // Initial sync after layout
-  setTimeout(computeActive, 0);
+  if (sections.length) {
+    window.addEventListener('scroll', onScrollOrResize, { passive: true });
+    window.addEventListener('resize', onScrollOrResize);
+    setTimeout(computeActive, 0);
+  }
 }
 
-// --- public init used from template ---
+// --- public init (called from template) ---
 export function initPartials() {
   // Performances
   const allBtn   = document.getElementById('view-all-performances');
@@ -169,6 +174,6 @@ export function initPartials() {
     });
   }
 
-  // Replace default ScrollSpy with robust custom logic
+  // Navbar behavior
   initCustomAnchorScrollAndActive();
 }

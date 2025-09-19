@@ -1,4 +1,7 @@
+import os
 from pathlib import Path
+
+from django.urls import reverse_lazy
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -9,6 +12,9 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
+    "captcha",
+    "crispy_bootstrap5",
+    "crispy_forms",
     "widget_tweaks",
     "debug_toolbar",
     "user",
@@ -106,3 +112,25 @@ STORAGES = {
 INTERNAL_IPS = [
     "127.0.0.1",
 ]
+
+LOGIN_REDIRECT_URL = reverse_lazy("theater:home")
+
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER", "")
+EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD", "")
+
+
+CRISPY_ALLOWED_TEMPLATE_PACKS = ["bootstrap5"]
+CRISPY_TEMPLATE_PACK = "bootstrap5"
+
+CAPTCHA_FONT_SIZE = 100
+CAPTCHA_LENGTH = 6
+CAPTCHA_IMAGE_BEHAVIOR = "base64"
+CAPTCHA_FONT_PATH = os.path.join(BASE_DIR, "static", "fonts", "DejaVuSans.ttf")
+CAPTCHA_NOISE_FUNCTIONS = ("captcha.helpers.noise_arcs", "captcha.helpers.noise_dots")
+CAPTCHA_BACKGROUND_COLOR = "#ffffff"
+CAPTCHA_FOREGROUND_COLOR = "#000000"
+CAPTCHA_CHALLENGE_FUNCT = "captcha.helpers.random_char_challenge"

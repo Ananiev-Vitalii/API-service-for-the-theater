@@ -6,8 +6,10 @@ from django.contrib import admin
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("", include("theater.urls", namespace="theater")),
+    path("accounts/", include("user.urls", namespace="user")),
     path("ajax/", include(("theater.ajax_urls", "ajax"), namespace="ajax")),
     path("api/", include(("theater.api_urls", "api"), namespace="api")),
+    path("captcha/", include("captcha.urls")),
 ]
 
 if settings.DEBUG:

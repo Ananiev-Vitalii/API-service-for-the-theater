@@ -1,10 +1,10 @@
 from django.views import generic
 from django.utils import timezone
 from django.db.models import QuerySet
-from django.http import JsonResponse, HttpRequest
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404
 from django.views.generic.edit import FormMixin
 from django.db import IntegrityError, transaction
+from django.http import JsonResponse, HttpRequest
 from django.views.decorators.http import require_GET
 from django.contrib.auth.views import redirect_to_login
 from django.contrib.auth.mixins import LoginRequiredMixin
