@@ -12,6 +12,8 @@ urlpatterns = [
     path("captcha/", include("captcha.urls")),
 ]
 
+handler404 = "theater.views.custom_page_not_found_view"
+
 if settings.DEBUG:
     import debug_toolbar
 

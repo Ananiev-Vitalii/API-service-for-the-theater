@@ -1,16 +1,22 @@
 from django.views import generic
 from django.utils import timezone
 from django.db.models import QuerySet
-from django.shortcuts import get_object_or_404
 from django.views.generic.edit import FormMixin
 from django.db import IntegrityError, transaction
-from django.http import JsonResponse, HttpRequest
 from django.views.decorators.http import require_GET
+from django.shortcuts import get_object_or_404, render
 from django.contrib.auth.views import redirect_to_login
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import JsonResponse, HttpRequest, HttpResponse, Http404
 from django.db.models import (
-    Count, F, IntegerField, BooleanField, ExpressionWrapper,
-    Case, When, Value,
+    Count,
+    F,
+    IntegerField,
+    BooleanField,
+    ExpressionWrapper,
+    Case,
+    When,
+    Value,
 )
 
 from theater.utils import ajax_only
@@ -153,3 +159,9 @@ class HomePageListView(FormMixin, PerformanceBaseListView):
         if is_ajax:
             return JsonResponse({"success": True, "message": MSG.SUCCESS})
         return self.render_to_response(self.get_context_data(form=self.get_form()))
+
+
+def custom_page_not_found_view(
+    request: HttpRequest, exception: Http404
+) -> HttpResponse:
+    return render(request, "404.html", status=404)

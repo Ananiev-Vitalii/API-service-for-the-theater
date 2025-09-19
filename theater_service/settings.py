@@ -9,7 +9,7 @@ SECRET_KEY = "django-insecure-xaqw*c+3gr@1l^l3u8p$5s=#cq!1_7k&!41zu^a473wz_f2)of
 
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["127.0.0.1", "localhost"]
 
 INSTALLED_APPS = [
     "captcha",
