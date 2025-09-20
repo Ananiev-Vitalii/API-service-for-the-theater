@@ -127,7 +127,7 @@ CRISPY_ALLOWED_TEMPLATE_PACKS = ["bootstrap5"]
 CRISPY_TEMPLATE_PACK = "bootstrap5"
 
 CAPTCHA_FONT_SIZE = 100
-CAPTCHA_LENGTH = 6
+CAPTCHA_LENGTH = 5
 CAPTCHA_IMAGE_BEHAVIOR = "base64"
 CAPTCHA_FONT_PATH = os.path.join(BASE_DIR, "static", "fonts", "DejaVuSans.ttf")
 CAPTCHA_NOISE_FUNCTIONS = ("captcha.helpers.noise_arcs", "captcha.helpers.noise_dots")

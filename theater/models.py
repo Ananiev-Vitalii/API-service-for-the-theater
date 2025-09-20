@@ -65,7 +65,7 @@ class Performance(models.Model):
     theatre_hall = models.ForeignKey(
         TheatreHall, on_delete=models.CASCADE, related_name="performances"
     )
-    show_time = models.DateTimeField()
+    show_time = models.DateTimeField(db_index=True)
 
     def __str__(self) -> str:
         return f"{self.play.title} at {self.show_time}"
@@ -76,6 +76,11 @@ class Reservation(models.Model):
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="reservations"
     )
+
+    class Meta:
+        indexes = [
+            models.Index(fields=["user", "created_at"], name="res_user_created_idx"),
+        ]
 
     def __str__(self) -> str:
         return f"Reservation #{self.id} by {self.user}"
