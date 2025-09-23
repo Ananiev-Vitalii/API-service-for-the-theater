@@ -1,17 +1,22 @@
 import os
 from pathlib import Path
-
 from django.urls import reverse_lazy
 
-BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = "django-insecure-xaqw*c+3gr@1l^l3u8p$5s=#cq!1_7k&!41zu^a473wz_f2)of"
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
+
+SECRET_KEY = os.environ.get(
+    "DJANGO_SECRET_KEY",
+    "django-insecure-xaqw*c+3gr@1l^l3u8p$5s=#cq!1_7k&!41zu^a473wz_f2)of",
+)
+
 
 DEBUG = True
 
 ALLOWED_HOSTS = ["127.0.0.1", "localhost"]
 
 INSTALLED_APPS = [
+    "django_celery_beat",
     "captcha",
     "crispy_bootstrap5",
     "crispy_forms",
@@ -65,6 +70,7 @@ DATABASES = {
         "NAME": BASE_DIR / "db.sqlite3",
     }
 }
+
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -134,3 +140,10 @@ CAPTCHA_NOISE_FUNCTIONS = ("captcha.helpers.noise_arcs", "captcha.helpers.noise_
 CAPTCHA_BACKGROUND_COLOR = "#ffffff"
 CAPTCHA_FOREGROUND_COLOR = "#000000"
 CAPTCHA_CHALLENGE_FUNCT = "captcha.helpers.random_char_challenge"
+
+CELERY_BROKER_URL = "redis://localhost:6379"
+CELERY_RESULT_BACKEND = None
+CELERY_TASK_IGNORE_RESULT = True
+CELERY_TIMEZONE = "America/Vancouver"
+CELERY_TASK_TRACK_STARTED = False
+CELERY_TASK_TIME_LIMIT = 30 * 60
