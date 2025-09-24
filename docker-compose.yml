@@ -1,0 +1,76 @@
+services:
+  db:
+    image: postgres:16
+    env_file:
+      - .env
+    ports:
+      - "5432:5432"
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:7-alpine
+
+  web:
+    build: .
+    command: >
+      sh -c "python manage.py wait_for_db &&
+             python manage.py migrate --noinput &&
+             python manage.py runserver 0.0.0.0:8000"
+    volumes:
+      - ./:/code
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    environment:
+      POSTGRES_HOST: db
+    depends_on:
+      - db
+      - redis
+
+  celery:
+    build: .
+    command: >
+      sh -c "python manage.py wait_for_db &&
+             celery -A theater_service worker -l INFO --pool=solo"
+    env_file:
+      - .env
+    environment:
+      POSTGRES_HOST: db
+    depends_on:
+      - db
+      - redis
+
+  celery-beat:
+    build: .
+    command: >
+      sh -c "python manage.py wait_for_db &&
+             celery -A theater_service beat -l INFO
+             --scheduler django_celery_beat.schedulers:DatabaseScheduler"
+    env_file:
+      - .env
+    environment:
+      POSTGRES_HOST: db
+    depends_on:
+      - db
+      - redis
+
+  flower:
+    build: .
+    command: >
+      sh -c "python manage.py wait_for_db &&
+             celery -A theater_service flower --address=0.0.0.0 --port=5555"
+    ports:
+      - "5555:5555"
+    env_file:
+      - .env
+    environment:
+      POSTGRES_HOST: db
+    depends_on:
+      - db
+      - redis
+      - celery
+
+volumes:
+  pg_data:

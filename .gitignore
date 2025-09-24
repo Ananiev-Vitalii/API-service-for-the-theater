@@ -1,6 +1,55 @@
+# Virtual env
 .venv/
+venv/
+
+# IDE
 .idea/
-**__pycache__
-db.sqlite3
-media/
+.vscode/
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# Python cache/bytecode
+__pycache__/
+**/__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Secrets / env
 .env
+.env.*
+*.env
+
+# Django (dev artifacts)
+db.sqlite3
+*.sqlite3
+media/
+staticfiles/
+
+# Celery beat schedule files
+celerybeat-schedule
+celerybeat-schedule.*
+celerybeat-schedule*
+
+# Logs
+*.log
+logs/
+
+# Test / tooling caches
+.coverage
+.coverage.*
+htmlcov/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Docker local data (if bind-mounted)
+pg_data/
+redis_data/
+postgres_data/
+
+# Build artifacts
+dist/
+build/
