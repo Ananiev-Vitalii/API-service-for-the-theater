@@ -7,8 +7,11 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("", include("theater.urls", namespace="theater")),
     path("accounts/", include("user.urls", namespace="user")),
-    path("ajax/", include(("theater.ajax_urls", "ajax"), namespace="ajax")),
-    path("api/", include(("theater.api_urls", "api"), namespace="api")),
+    path("ajax/", include(("theater.ajax.urls", "ajax"), namespace="ajax")),
+    # API (legacy Django views)
+    path("api/", include(("theater.api.urls", "api"), namespace="api")),
+    # API v1 (DRF)
+    path("api/v1/", include(("theater.api.v1.urls", "api_v1"), namespace="api_v1")),
     path("captcha/", include("captcha.urls")),
 ]
 

@@ -16,6 +16,8 @@ DEBUG = True
 ALLOWED_HOSTS = ["127.0.0.1", "localhost"]
 
 INSTALLED_APPS = [
+    "django_filters",
+    "rest_framework",
     "django_celery_beat",
     "captcha",
     "crispy_bootstrap5",
@@ -147,3 +149,9 @@ CELERY_TASK_IGNORE_RESULT = True
 CELERY_TIMEZONE = "America/Vancouver"
 CELERY_TASK_TRACK_STARTED = False
 CELERY_TASK_TIME_LIMIT = 30 * 60
+
+REST_FRAMEWORK = {
+    "DEFAULT_PERMISSION_CLASSES": [
+        "theater.api.v1.permissions.IsAdminAllOrIsAuthenticatedReadOnly",
+    ],
+}

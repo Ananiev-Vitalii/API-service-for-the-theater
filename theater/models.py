@@ -30,14 +30,14 @@ class Actor(models.Model):
 
 
 class Genre(models.Model):
-    name = models.CharField(max_length=50)
+    name = models.CharField(max_length=50, unique=True)
 
     def __str__(self) -> str:
         return self.name
 
 
 class Play(models.Model):
-    title = models.CharField(max_length=50)
+    title = models.CharField(max_length=50, unique=True)
     description = models.TextField(max_length=255)
     actors = models.ManyToManyField(Actor, related_name="plays")
     genres = models.ManyToManyField(Genre, related_name="plays")
@@ -50,7 +50,7 @@ class Play(models.Model):
 
 
 class TheatreHall(models.Model):
-    name = models.CharField(max_length=20)
+    name = models.CharField(max_length=20, unique=True)
     rows = models.PositiveIntegerField(validators=[MinValueValidator(1)])
     seats_in_row = models.PositiveIntegerField(validators=[MinValueValidator(1)])
 
