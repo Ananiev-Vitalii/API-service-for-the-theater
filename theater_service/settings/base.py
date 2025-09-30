@@ -17,6 +17,7 @@ DEBUG = True
 ALLOWED_HOSTS = ["127.0.0.1", "localhost"]
 
 INSTALLED_APPS = [
+    "drf_spectacular",
     "django_filters",
     "rest_framework",
     "django_celery_beat",
@@ -155,6 +156,7 @@ REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": [
         "theater.api.v1.permissions.IsAdminAllOrIsAuthenticatedReadOnly",
     ],
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ],
@@ -175,4 +177,31 @@ SIMPLE_JWT = {
     "ROTATE_REFRESH_TOKENS": False,
     "BLACKLIST_AFTER_ROTATION": False,
     "UPDATE_LAST_LOGIN": False,
+}
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": "Theater API",
+    "DESCRIPTION": (
+        "Auth: Bearer JWT (Authorization: Bearer <access>)\n"
+        "Default permissions: IsAdminAllOrIsAuthenticatedReadOnly\n"
+        "Throttling: anon 100/day, user 1000/day; returns 429 on limit."
+    ),
+    "VERSION": "1.0.0",
+    "SERVE_INCLUDE_SCHEMA": False,
+    "COMPONENTS": {
+        "securitySchemes": {
+            "BearerAuth": {
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT",
+            }
+        }
+    },
+    "SECURITY": [{"BearerAuth": []}],
+    "SWAGGER_UI_SETTINGS": {
+        "deepLinking": True,
+        "defaultModelRendering": "model",
+        "defaultModelsExpandDepth": 2,
+        "defaultModelExpandDepth": 2,
+    },
 }

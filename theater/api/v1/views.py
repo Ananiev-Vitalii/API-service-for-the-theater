@@ -1,6 +1,13 @@
 from rest_framework import viewsets
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.permissions import IsAuthenticated
+from drf_spectacular.utils import (
+    extend_schema,
+    extend_schema_view,
+    OpenApiParameter,
+    OpenApiTypes,
+    OpenApiExample,
+)
 
 from theater.api.v1.serializers import (
     ActorSerializer,
@@ -45,6 +52,20 @@ class TheatreHallViewSet(viewsets.ModelViewSet):
     serializer_class = TheatreHallSerializer
 
 
+@extend_schema_view(
+    list=extend_schema(
+        description="List plays. Supports filtering by a single genre.",
+        parameters=[
+            OpenApiParameter(
+                name="genres",
+                type=OpenApiTypes.INT,
+                location=OpenApiParameter.QUERY,
+                description="Filter by a single genre id. Example: ?genres=2",
+                examples=[OpenApiExample("Genre id", value=2)],
+            ),
+        ],
+    )
+)
 class PlayViewSet(viewsets.ModelViewSet):
     queryset = (
         Play.objects.all()
@@ -53,7 +74,7 @@ class PlayViewSet(viewsets.ModelViewSet):
         .distinct()
     )
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = {"genres": ["exact", "in"]}
+    filterset_fields = {"genres": ["exact"]}
 
     def get_serializer_class(self):
         if self.action == "list":
@@ -63,6 +84,20 @@ class PlayViewSet(viewsets.ModelViewSet):
         return PlayWriteSerializer
 
 
+@extend_schema_view(
+    list=extend_schema(
+        description="List performances. Supports filtering by theatre hall.",
+        parameters=[
+            OpenApiParameter(
+                name="theatre_hall",
+                type=OpenApiTypes.INT,
+                location=OpenApiParameter.QUERY,
+                description="Filter by theatre hall id. Example: `?theatre_hall=3`.",
+                examples=[OpenApiExample("Hall id", value=3)],
+            ),
+        ],
+    )
+)
 class PerformanceViewSet(viewsets.ModelViewSet):
     queryset = (
         Performance.objects.select_related("play", "theatre_hall")
@@ -104,7 +139,20 @@ class ReservationViewSet(viewsets.ModelViewSet):
         return ReservationWriteSerializer
 
 
-# Ticket
+@extend_schema_view(
+    list=extend_schema(
+        description="List tickets. Supports filtering by performance.",
+        parameters=[
+            OpenApiParameter(
+                name="performance",
+                type=OpenApiTypes.INT,
+                location=OpenApiParameter.QUERY,
+                description="Filter by performance id. Example: `?performance=10`.",
+                examples=[OpenApiExample("Performance id", value=10)],
+            ),
+        ],
+    )
+)
 class TicketViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
     filter_backends = [DjangoFilterBackend]
