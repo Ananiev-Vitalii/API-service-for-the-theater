@@ -23,6 +23,10 @@ urlpatterns = [
     path("api/", include(("theater.api.urls", "api"), namespace="api")),
     # API v1 (DRF)
     path("api/v1/", include(("theater.api.v1.urls", "api_v1"), namespace="api_v1")),
+    path(
+        "api/v1/accounts/",
+        include(("user.api.v1.urls", "user_api_v1"), namespace="user_api_v1"),
+    ),
     # API v1 Auth (JWT)
     path("api/v1/token/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
     path("api/v1/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
