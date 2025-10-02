@@ -152,6 +152,10 @@ class ReservationRetrieveSerializer(serializers.ModelSerializer):
 
 
 class ReservationWriteSerializer(serializers.ModelSerializer):
+    user = serializers.PrimaryKeyRelatedField(
+        queryset=User.objects.all(), required=False
+    )
+
     class Meta:
         model = Reservation
         fields = ("id", "created_at", "user")
