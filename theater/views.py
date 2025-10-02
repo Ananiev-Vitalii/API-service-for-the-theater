@@ -19,6 +19,7 @@ from django.db.models import (
     Value,
 )
 
+from theater.services import notify_ticket_booked
 from theater.utils import ajax_only
 from theater.forms import TicketForm
 from theater.messages import MSG
@@ -142,6 +143,7 @@ class HomePageListView(FormMixin, PerformanceBaseListView):
                 ticket = form.save(commit=False)
                 ticket.reservation = reservation
                 ticket.save()
+                notify_ticket_booked(request, reservation, ticket)
         except IntegrityError:
 
             if is_ajax:
