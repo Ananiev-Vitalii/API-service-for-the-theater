@@ -16,3 +16,7 @@ DATABASES = {
         "OPTIONS": {"sslmode": "require"},
     }
 }
+
+STATIC_URL = "/static/"
+MEDIA_URL = "/media/"
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
