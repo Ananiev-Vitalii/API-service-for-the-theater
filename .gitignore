@@ -1,55 +1,140 @@
-# Virtual env
-.venv/
-venv/
-
-# IDE
-.idea/
-.vscode/
-
-# OS junk
-.DS_Store
-Thumbs.db
-
-# Python cache/bytecode
+### Django ###
+*.log
+*.pot
+*.pyc
 __pycache__/
-**/__pycache__/
-*.py[cod]
-*.pyo
-*.pyd
-
-# Secrets / env
-.env
-.env.*
-*.env
-
-# Django (dev artifacts)
+local_settings.py
 db.sqlite3
-*.sqlite3
+db.sqlite3-journal
 media/
 staticfiles/
 
-# Celery beat schedule files
-celerybeat-schedule
-celerybeat-schedule.*
-celerybeat-schedule*
+### Python / packaging ###
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
 
-# Logs
-*.log
-logs/
+### PyInstaller ###
+*.manifest
+*.spec
 
-# Test / tooling caches
+### Installer logs ###
+pip-log.txt
+pip-delete-this-directory.txt
+
+### Tests / coverage ###
+.tox/
+.nox/
 .coverage
 .coverage.*
-htmlcov/
+.cache
+coverage.xml
+nosetests.xml
+*.cover
+*.py,cover
+.hypothesis/
 .pytest_cache/
+htmlcov/
+cover/
+junit.xml
+
+### Translations ###
+*.mo
+
+### Flask / Scrapy ###
+instance/
+.webassets-cache
+.scrapy
+
+### Sphinx docs ###
+docs/_build/
+
+### PyBuilder ###
+.pybuilder/
+target/
+
+### Jupyter / IPython ###
+.ipynb_checkpoints
+profile_default/
+ipython_config.py
+
+### PDM ###
+# Uncomment if you want to ignore the lockfile
+#pdm.lock
+.pdm.toml
+
+### PEP 582 ###
+__pypackages__/
+
+### Celery ###
+celerybeat-schedule
+celerybeat.pid
+celerybeat-schedule.*
+celerybeat-schedule*
+celeryd.pid
+
+### SageMath ###
+*.sage.py
+
+### Environments ###
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+### Spyder / Rope ###
+.spyderproject
+.spyproject
+.ropeproject
+
+### MkDocs ###
+/site
+
+### Type checkers ###
 .mypy_cache/
-.ruff_cache/
+.dmypy.json
+dmypy.json
+.pyre/
+.pytype/
 
-# Docker local data (if bind-mounted)
-pg_data/
-redis_data/
-postgres_data/
+### Cython ###
+cython_debug/
 
-# Build artifacts
-dist/
-build/
+### PyCharm (granular rules) ###
+.idea/**/workspace.xml
+.idea/**/tasks.xml
+.idea/**/usage.statistics.xml
+.idea/**/dictionaries
+.idea/**/shelf
+.idea/**/aws.xml
+.idea/**/contentModel.xml
+.idea/**/dataSources/
+.idea/**/dataSources.ids
+.idea/**/dataSources.local.xml
+.idea/**/sqlDataSources.xml
+.idea/**/dynamic.xml
+.idea/**/uiDesigner.xml
+.idea/**/dbnavigator.xml
+.idea/**/gradle.**
+
