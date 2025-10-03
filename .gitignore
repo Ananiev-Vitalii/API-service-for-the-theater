@@ -138,3 +138,6 @@ cython_debug/
 .idea/**/dbnavigator.xml
 .idea/**/gradle.**
 
+# IDE folders (ignore whole folders)
+.idea/
+.vscode/
