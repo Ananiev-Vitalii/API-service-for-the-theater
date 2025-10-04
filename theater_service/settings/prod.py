@@ -8,6 +8,8 @@ RENDER_EXTERNAL_HOSTNAME = os.environ.get("RENDER_EXTERNAL_HOSTNAME")
 if RENDER_EXTERNAL_HOSTNAME:
     ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
 
+INSTALLED_APPS += ["anymail"]
+
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
@@ -23,3 +25,10 @@ DATABASES = {
 STATIC_URL = "/static/"
 MEDIA_URL = "/media/"
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+
+EMAIL_BACKEND = "anymail.backends.sendgrid.EmailBackend"
+ANYMAIL = {
+    "SENDGRID_API_KEY": os.environ["SENDGRID_API_KEY"],
+}
+DEFAULT_FROM_EMAIL = "noreply@your-domain.com"
+SERVER_EMAIL = DEFAULT_FROM_EMAIL
