@@ -57,5 +57,5 @@ if settings.DEBUG:
     ]
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
-if settings.DEBUG is True or os.environ.get("RENDER") == "true":
+if settings.DEBUG or os.environ.get("RENDER"):
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
