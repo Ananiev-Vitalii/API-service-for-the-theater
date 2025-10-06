@@ -20,7 +20,3 @@ DATABASES = {
         "OPTIONS": {"sslmode": "require"},
     }
 }
-MEDIA_URL = "/media/"
-MEDIA_ROOT = os.path.join(BASE_DIR, "media")
-STATIC_URL = "/static/"
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
