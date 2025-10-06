@@ -3,7 +3,7 @@ from theater.utils import ajax_only
 from theater.views import (
     PerformanceBaseListView,
     ActorsListView,
-    MyReservationsPartialView
+    MyReservationsPartialView,
 )
 
 app_name = "ajax"
@@ -23,5 +23,9 @@ urlpatterns = [
         "actors/all/", ajax_only(ActorsListView.as_view(limit=None)), name="actors-all"
     ),
     path("actors/top/", ajax_only(ActorsListView.as_view(limit=3)), name="actors-top"),
-    path("reservations/my/", ajax_only(MyReservationsPartialView.as_view()), name="reservations-my"),
+    path(
+        "reservations/my/",
+        ajax_only(MyReservationsPartialView.as_view()),
+        name="reservations-my",
+    ),
 ]

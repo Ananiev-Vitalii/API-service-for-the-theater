@@ -45,7 +45,10 @@ def send_ticket_email(
         "home_url": home_url,
     }
 
-    subject = f"[{site_name}] Reservation №{r.id}: {ctx['play_title']} — {ctx['show_time']:%Y-%m-%d %H:%M}"
+    subject = (
+        f"[{site_name}] Reservation №{r.id}: {ctx['play_title']} — "
+        f"{ctx['show_time']:%Y-%m-%d %H:%M}"
+    )
     text = render_to_string("email/ticket_booked.txt", ctx)
     html = render_to_string("email/ticket_booked.html", ctx)
 

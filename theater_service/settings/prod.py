@@ -1,4 +1,5 @@
 from theater_service.settings.base import *  # noqa
+import os
 
 DEBUG = False
 

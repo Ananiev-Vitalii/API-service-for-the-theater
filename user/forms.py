@@ -31,7 +31,9 @@ class UserAuthenticationForm(AuthenticationForm):
             HTML(
                 """
                 {% if form.errors %}
-                    <p class="error-message">Invalid email address or password. Please try again.</p>
+                    <p class="error-message">
+                    Invalid email address or password. Please try again.
+                    </p>
                 {% endif %}
                 """
             ),
