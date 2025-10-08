@@ -1,0 +1,13 @@
+.git
+.gitignore
+__pycache__/
+*.pyc
+*.pyo
+*.log
+.env
+.venv/
+node_modules/
+staticfiles/
+media/
+pg_data/
+celerybeat-schedule*

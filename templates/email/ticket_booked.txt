@@ -1,0 +1,14 @@
+Hello, {{ user_full }}!
+
+Your reservation at {{ site_name }} has been confirmed.
+
+Details:
+  • Play: {{ play_title }}
+  • Date & time: {{ show_time|date:"Y-m-d H:i" }}
+  • Hall: {{ hall_name }}
+  • Seat: Row {{ row }}, Seat {{ seat }}
+  • Reservation number: {{ reservation_id }}
+
+{% if home_url %}Manage your bookings: {{ home_url }}{% endif %}
+
+Thank you for choosing {{ site_name }}!

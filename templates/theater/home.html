@@ -1,0 +1,210 @@
+{% extends "base.html" %}
+{% load widget_tweaks %}
+{% load static %}
+{% block title %}
+Wildfire Stageworks
+{% endblock title %}
+
+{% block content %}
+
+<!-- Hero Section -->
+<section id="home" class="hero">
+  <div class="text-center">
+    <h1 class="display-4">Welcome to our theatre!</h1>
+    <p class="lead">This is where emotions, art and inspiration live.</p>
+  </div>
+</section>
+
+<!-- About us -->
+<section id="about" class="py-5">
+  <div class="container">
+    <h2 class="section-title">About our theatre</h2>
+    <div class="row align-items-center">
+      <div class="col-md-6">
+        <p>Wildfire Stageworks was founded in 2010 by a small group of local artists passionate about making theatre
+          more accessible. They began by staging intimate performances in community centers and coffee shops, quickly
+          earning a reputation for their inventive sets and engaging storytelling. In 2015, the company renovated an old
+          warehouse in the city’s arts district, turning it into a versatile black‐box theatre. Today, Wildfire
+          Stageworks presents a season of six productions each year—ranging from contemporary dramas to beloved
+          classics—while continuing to nurture emerging talent and bring new audiences into the world of live
+          performance.</p>
+      </div>
+      <div class="col-md-6">
+        <img src="{% static 'img/theater_stage.jpg' %}" class="img-fluid rounded" alt="Theater stage">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Performances -->
+<section id="performances" class="py-5 bg-light">
+  <div class="container">
+    <h2 class="section-title">Upcoming Performances</h2>
+    <div class="row g-4" id="performances-cards">
+      {% include "includes/performances_partial.html" %}
+    </div>
+
+    <div class="text-center mt-4">
+      <button id="view-all-performances" class="btn btn-primary text-white mt-auto"
+              data-url="{% url 'ajax:performances-all' %}">
+        View All <i class="fas fa-chevron-down"></i>
+      </button>
+      <button id="view-less-performances" class="btn btn-primary text-white mt-auto" style="display: none;"
+              data-url="{% url 'ajax:performances-top' %}">
+        View Less <i class="fas fa-chevron-up"></i>
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- Actors -->
+<section id="actors" class="py-5">
+  <div class="container">
+    <h2 class="section-title">Our Actors</h2>
+    <div class="row g-4" id="actors-cards">
+      {% include "includes/actors_partial.html" %}
+    </div>
+    <div class="text-center mt-4">
+      <button id="view-all-actors" class="btn btn-primary text-white mt-auto" data-url="{% url 'ajax:actors-all' %}">
+        View All <i class="fas fa-chevron-down"></i>
+      </button>
+      <button id="view-less-actors" class="btn btn-primary text-white mt-auto" style="display: none;"
+              data-url="{% url 'ajax:actors-top' %}">
+        View Less <i class="fas fa-chevron-up"></i>
+      </button>
+    </div>
+  </div>
+</section>
+
+
+<!-- Reserve Your Seat -->
+<section id="ticket-purchase" class="py-5 booking-section">
+  <div class="container">
+    <h2 class="section-title">Reserve Your Seat</h2>
+    <div class="row g-4 align-items-stretch">
+      <div class="col-lg-6 order-1 order-lg-2">
+        <div class="card hall-card h-100 shadow-lg overflow-hidden">
+          <div class="hall-media-wrap">
+            <img
+                    src="{% static 'img/seats_theatre_hall.jpg' %}"
+                    alt="Theater layout"
+                    class="hall-media-img"
+                    loading="lazy"
+                    decoding="async"
+                    width="1200" height="750"
+            >
+            <div class="hall-overlay">
+              <div class="hall-caption">
+                <span class="badge bg-dark bg-opacity-75 rounded-pill px-3 py-2">
+                  Live seating map preview
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="card-body p-4">
+            <h4 class="h6 text-uppercase text-muted mb-2">Hall overview</h4>
+            <p class="mb-0">Select a performance to load seat availability. Reserved seats are disabled in the list</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-6 order-2 order-lg-1">
+        <div class="card booking-card h-100 shadow-lg">
+          <div class="card-body p-4 p-md-5">
+            <div id="form-alert" class="alert d-none" role="status" aria-live="polite" aria-atomic="true"></div>
+            <h3 class="h4 fw-semibold mb-4">Select a performance, row and seat.</h3>
+            <form id="ticket-form" method="post" action="" novalidate>
+              {% csrf_token %}
+              <div class="form-floating mb-3">
+                {{ form.performance|add_class:"form-select" }}
+                <label for="{{ form.performance.id_for_label }}">Performance</label>
+              </div>
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <div class="form-floating">
+                    {{ form.row|add_class:"form-select"|attr:"disabled:disabled" }}
+                    <label for="{{ form.row.id_for_label }}">Row</label>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-floating">
+                    {{ form.seat|add_class:"form-select"|attr:"disabled:disabled" }}
+                    <label for="{{ form.seat.id_for_label }}">Seat</label>
+                  </div>
+                </div>
+              </div>
+              <button id="book-btn" type="submit" class="btn btn-primary text-white btn-lg w-100 mt-4">
+                <span class="btn-label">Book Ticket</span>
+                <span class="spinner-border spinner-border-sm align-text-top ms-2 d-none" aria-hidden="true"></span>
+              </button>
+              <p class="text-muted small mt-3 mb-0">
+                You’ll receive a confirmation by email. No charges are made until the booking is confirmed
+              </p>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- My Reservations -->
+<section id="my-reservations" class="py-5">
+  <div class="container">
+    <h2 class="section-title">My Reservations</h2>
+
+    <div class="table-responsive">
+      <table class="table table-bordered table-hover align-middle">
+        <thead class="thead-light">
+          <tr>
+            <th>#</th>
+            <th>Performance</th>
+            <th>Date</th>
+            <th>Theatre Hall</th>
+            <th>Row</th>
+            <th>Seat</th>
+            <th>Reservation Date</th>
+          </tr>
+        </thead>
+        <tbody id="my-reservations-body" data-url="{% url 'ajax:reservations-my' %}">
+          {% if my_tickets %}
+            {% for t in my_tickets %}
+              <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ t.performance.play.title }}</td>
+                <td>{{ t.performance.show_time|date:"Y-m-d H:i" }}</td>
+                <td>{{ t.performance.theatre_hall.name }}</td>
+                <td>{{ t.row }}</td>
+                <td>{{ t.seat }}</td>
+                <td>{{ t.reservation.created_at|date:"Y-m-d H:i" }}</td>
+              </tr>
+            {% empty %}
+              <tr>
+                <td colspan="7" class="text-center text-muted py-4">
+                  You have no reservations yet.
+                </td>
+              </tr>
+            {% endfor %}
+          {% else %}
+            <tr>
+              <td colspan="7" class="text-center text-muted py-4">
+                You have no reservations yet.
+              </td>
+            </tr>
+          {% endif %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+{% endblock content %}
+
+{% block js %}
+<script type="module">
+  import { initPartials }    from "{% static 'js/partials.js' %}";
+  import { initBookingForm } from "{% static 'js/booking.js' %}";
+
+  initPartials();
+  initBookingForm();
+</script>
+{% endblock js %}

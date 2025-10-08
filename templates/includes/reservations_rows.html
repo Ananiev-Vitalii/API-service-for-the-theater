@@ -1,0 +1,15 @@
+{% for t in my_tickets %}
+<tr>
+  <td>{{ forloop.counter }}</td>
+  <td>{{ t.performance.play.title }}</td>
+  <td>{{ t.performance.show_time|date:"Y-m-d H:i" }}</td>
+  <td>{{ t.performance.theatre_hall.name }}</td>
+  <td>{{ t.row }}</td>
+  <td>{{ t.seat }}</td>
+  <td>{{ t.reservation.created_at|date:"Y-m-d" }}</td>
+</tr>
+{% empty %}
+<tr>
+  <td colspan="7" class="text-muted text-center py-4">No reservations yet.</td>
+</tr>
+{% endfor %}

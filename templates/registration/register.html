@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% load static crispy_forms_tags %}
+
+{% block title %}Wildfire Stageworks / Register{% endblock %}
+
+{% block content %}
+<section class="auth-page">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-12 col-sm-10 col-md-8 col-lg-6 col-xl-4">
+        <div class="card p-4 p-md-5">
+          <h1 class="h4 text-center mb-4">Sign up</h1>
+          {% crispy form %}
+          <div class="auth-links mt-3">
+            <p class="small mb-0 text-center text-muted">
+              Already have an account?
+              <a href="{% url 'user:login' %}" class="link-primary">Log in</a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block js %}
+<!-- JavaScript Libraries -->
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<!-- Password toggle -->
+<script src="{% static 'js/password-toggle.js' %}" defer></script>
+<!-- Captcha -->
+<script src="{% static 'js/captcha-refresh.js' %}?v=1" defer></script>
+{% endblock js %}
