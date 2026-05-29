@@ -16,3 +16,12 @@ DATABASES = {
         "OPTIONS": {"sslmode": "require"},
     }
 }
+
+STORAGES = {
+    "default": {
+        "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
