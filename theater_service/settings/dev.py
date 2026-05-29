@@ -1,7 +1,6 @@
 from theater_service.settings.base import *  # noqa
 import os
 
-
 DEBUG = True
 
 ALLOWED_HOSTS = ["127.0.0.1", "localhost"]
@@ -15,4 +14,13 @@ DATABASES = {
         "HOST": os.getenv("POSTGRES_HOST", "db"),
         "PORT": int(os.getenv("POSTGRES_PORT", "5432")),
     }
+}
+
+STORAGES = {
+    "default": {
+        "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
 }

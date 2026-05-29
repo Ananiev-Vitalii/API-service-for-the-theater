@@ -1,8 +1,8 @@
 import os
+import cloudinary
 from pathlib import Path
 from datetime import timedelta
 from django.urls import reverse_lazy
-
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
@@ -10,7 +10,6 @@ SECRET_KEY = os.environ.get(
     "DJANGO_SECRET_KEY",
     "django-insecure-xaqw*c+3gr@1l^l3u8p$5s=#cq!1_7k&!41zu^a473wz_f2)of",
 )
-
 
 DEBUG = True
 
@@ -34,6 +33,8 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "cloudinary_storage",
+    "cloudinary",
     "django_cleanup.apps.CleanupConfig",
 ]
 
@@ -76,7 +77,6 @@ DATABASES = {
     }
 }
 
-
 AUTH_PASSWORD_VALIDATORS = [
     {
         "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
@@ -99,6 +99,13 @@ TIME_ZONE = "UTC"
 USE_I18N = True
 
 USE_TZ = True
+
+cloudinary.config(
+    cloud_name=os.environ.get("CLOUDINARY_CLOUD_NAME"),
+    api_key=os.environ.get("CLOUDINARY_API_KEY"),
+    api_secret=os.environ.get("CLOUDINARY_API_SECRET"),
+    secure=True,
+)
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
